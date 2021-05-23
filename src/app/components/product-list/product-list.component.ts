@@ -12,7 +12,7 @@ export class ProductListComponent implements OnInit {
 
   products: Product[];
   currentCategoryId: number;
-
+  searchMode: boolean;
   
   constructor(private productService: ProductService, 
     //useful for accessing route params
@@ -26,22 +26,44 @@ export class ProductListComponent implements OnInit {
   }
 
   listProducts(){
-    // check if 'id' param is available
-    const hasCategoryId: boolean = this.route.snapshot.paramMap.has('id');
 
-    if(hasCategoryId){
-      // convert 'id' string to a number
-      this.currentCategoryId = +this.route.snapshot.paramMap.get('id')!;
-    } else {
-      // default to 1
-      this.currentCategoryId = 1;
+    this.searchMode = this.route.snapshot.paramMap.has('keyword');
+
+    if(this.searchMode){
+      this.handleSearchProducts();
+    }else{
+      this.handleListProducts();
     }
+  }
+  handleSearchProducts() {
+    const searchKeyword: string = this.route.snapshot.paramMap.get('keyword')!;
 
-    this.productService.getProductList(this.currentCategoryId).subscribe(
-      data => {
+    this.productService.searchProducts(searchKeyword).subscribe(
+      data =>{
         this.products = data;
       }
     )
+
+  }
+
+  handleListProducts(){
+        // check if 'id' param is available
+        const hasCategoryId: boolean = this.route.snapshot.paramMap.has('id');
+
+        if(hasCategoryId){
+          // convert 'id' string to a number
+          this.currentCategoryId = +this.route.snapshot.paramMap.get('id')!;
+        } else {
+          // default to 1
+          this.currentCategoryId = 1;
+        }
+    
+        this.productService.getProductList(this.currentCategoryId).subscribe(
+          data => {
+            this.products = data;
+          }
+        )
+
   }
 
 }
