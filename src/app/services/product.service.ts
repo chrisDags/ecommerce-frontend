@@ -10,7 +10,6 @@ import { ProductCategory } from '../common/product-category';
 })
 export class ProductService {
 
-  
 
   private baseUrl = 'http://localhost:8080/api/products';
   private categoryBaseUrl = 'http://localhost:8080/api/productCategories';
@@ -28,6 +27,14 @@ export class ProductService {
       map(response => response._embedded.products)
     );
   }
+
+  getProduct(productId: number): Observable<Product> {
+    //throw new Error('Method not implemented.');
+    const productUrl = `${this.baseUrl}/${productId}`;
+
+    return this.httpClient.get<Product>(productUrl);
+  }
+
 
   getProductList(categoryId: number): Observable<Product[]>{
     
