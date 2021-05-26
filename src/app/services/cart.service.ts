@@ -24,14 +24,7 @@ export class CartService {
 
     if (this.cartItems.length > 0) {
       //find item based on item id
-      for (let elem of this.cartItems) {
-        console.log('in here');
-        if (elem.id === cartItem.id) {
-          existingCartItem = elem;
-          console.log('lol');
-          break;
-        }
-      }
+      existingCartItem = this.cartItems.find(elem => elem.id === cartItem.id)!;
       //check if it was found
       alreadyExistsInCart = existingCartItem != undefined;
     }
