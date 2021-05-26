@@ -42,6 +42,13 @@ export class ProductListComponent implements OnInit {
       this.handleListProducts();
     }
   }
+
+  addToCart(product: Product){
+
+    console.log(`added to cart: ${product.name}, ${product.unitPrice}`)
+
+    //Todo: impl
+  }
   
   handleSearchProducts() {
     const searchKeyword: string = this.route.snapshot.paramMap.get('keyword')!;
