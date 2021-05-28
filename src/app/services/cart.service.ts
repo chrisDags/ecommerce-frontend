@@ -6,6 +6,7 @@ import { CartItem } from '../common/cart-item';
   providedIn: 'root',
 })
 export class CartService {
+
   cartItems: CartItem[] = [];
 
   // Subject is a subclass of observable that can be used to publish events.
@@ -15,8 +16,27 @@ export class CartService {
 
   constructor() {}
 
+  decrementQuantity(cartItem: CartItem) {
+    cartItem.quantity--;
+
+    if(cartItem.quantity === 0){
+      this.remove(cartItem)
+    }else{
+      this.computeCartTotals();
+    }
+
+  }
+  remove(cartItem: CartItem) {
+    const itemIndex = this.cartItems.findIndex(elem => elem.id === cartItem.id);
+
+    if(itemIndex > -1){
+      this.cartItems.splice(itemIndex, 1)
+
+      this.computeCartTotals();
+    }
+  }
+
   addToCart(cartItem: CartItem) {
-    console.log('Im called');
 
     // check if an item exists in cart
     let alreadyExistsInCart: boolean = false;
@@ -29,7 +49,6 @@ export class CartService {
       alreadyExistsInCart = existingCartItem != undefined;
     }
 
-    console.log('im here');
     if (alreadyExistsInCart) {
       // increment item quantity in the array
       existingCartItem.quantity++;
