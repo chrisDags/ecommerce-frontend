@@ -20,8 +20,9 @@ export class CheckoutComponent implements OnInit {
   creditCardMonths: number[] = [];
 
   countries: Country[] =[];
-  states: State[] = [];
   
+  shippingAddressStates: State[] = [];
+  billingAddressStates: State[] = [];
 
   constructor(private formBuilder: FormBuilder, private luv2ShopFormService: Luv2ShopFormService) { }
 
@@ -82,18 +83,28 @@ export class CheckoutComponent implements OnInit {
       }
     );
 
+
+
   }
 
   onSubmit(){
     console.log("Handling the submition")
     console.log(this.checkoutFormGroup.get('customer')!.value);
+    console.log("Customer email address is: " + this.checkoutFormGroup.get('customer')!.value.email)
+
+    console.log("Customer shipping address country is: " + this.checkoutFormGroup.get('shippingAddress')!.value.country.name)
+    console.log("Customer shipping address state is: " + this.checkoutFormGroup.get('shippingAddress')!.value.state.name)
+
+
   }
 
   copyShippingAddressToBillingAddress(event: any) {
     if(event.target.checked){
       this.checkoutFormGroup.controls.billingAddress.setValue(this.checkoutFormGroup.controls.shippingAddress.value);
+      this.billingAddressStates = this.shippingAddressStates;
     }else{
       this.checkoutFormGroup.controls.billingAddress.reset();
+      this.billingAddressStates = [];
     }
   }
 
@@ -120,6 +131,28 @@ export class CheckoutComponent implements OnInit {
         this.creditCardMonths = data;
       }
     )
+  }
+
+  getStates(formGroupName: string){
+    const formGroup = this.checkoutFormGroup.get(formGroupName);
+    const countryCode = formGroup!.value.country.code;
+    const countryName = formGroup!.value.country.name;
+
+    console.log(`${formGroupName} country code: ${countryCode}`);
+    console.log(`${formGroupName} country code: ${countryName}`);
+
+    this.luv2ShopFormService.getStates(countryCode).subscribe(
+      data =>{
+        if(formGroupName === 'shippingAddress'){
+          this.shippingAddressStates = data;
+        } else {
+          this.billingAddressStates = data;
+        }
+
+        // select first state as the default
+        formGroup!.get('state')!.setValue(data[0]);
+      }
+    );
   }
 
 }
