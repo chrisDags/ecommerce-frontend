@@ -27,6 +27,14 @@
                         <div class="col-md-9">
                             <div class="input-space">
                                 <input formControlName="lastName" type="text">
+                                <div *ngIf="lastName!.invalid && (lastName!.dirty || lastName!.touched)" class="alert alert-danger mt-2">
+                                    <div *ngIf="lastName!.errors!.required">
+                                        Last Name is required.
+                                    </div>
+                                    <div *ngIf="lastName!.errors!.minlength">
+                                        Last Name must be at least 2 characters.
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -35,6 +43,14 @@
                         <div class="col-md-9">
                             <div class="input-space">
                                 <input formControlName="email" type="text">
+                                <div *ngIf="email!.invalid && (email!.dirty || email!.touched)" class="alert alert-danger mt-2">
+                                    <div *ngIf="email!.errors!.required">
+                                        Email is required.
+                                    </div>
+                                    <div *ngIf="email!.errors!.pattern">
+                                        Email format must be valid.
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
